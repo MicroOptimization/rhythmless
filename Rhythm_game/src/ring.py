@@ -13,25 +13,47 @@ class Ring():
         self.canvas = app.canvas
         self.diameter = 20
         self.radius = 300
-        self.y = 0
+        self.y = 1
         self.x = (self.canvas.winfo_width() - self.radius) / 2
         
         self.grow_factor = 1.03
         self.shrink_factor = 0.93
         
     def update(self):
-        
+        #print("y: " , self.y)
+        """
+        msg = ""
+        if self.y > self.canvas.winfo_height():
+            self.app.entities.remove(self)
+        elif self.y >= 480:
+            print("Miss")
+            msg = "Miss"
+            self.app.update_hit_msg(msg)
+        elif self.y >= 455:
+            print("Okay")
+            msg = "Okay"
+            self.app.update_hit_msg(msg)
+        elif self.y >= 430:
+            print("Great")
+            msg = "Great"
+            self.app.update_hit_msg(msg)
+        elif self.y >= 420:
+            print("Excellent")
+            msg = "Excellent"
+            self.app.update_hit_msg(msg)
+        """
         #self.radius *= self.grow_factor
         
+        self.radius += 5
         self.radius *= self.shrink_factor 
-        self.radius -= 0
         
         self.x = (self.canvas.winfo_width() - self.radius) / 2
-        self.acceleration = 1.05
+        self.acceleration = 1.01
         
-        self.y += 5 
+        self.y += 1.5 
         self.y *= self.acceleration
         
+        #print(self.radius)
         self.draw()
         
     def draw(self):
