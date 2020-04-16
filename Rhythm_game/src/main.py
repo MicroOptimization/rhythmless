@@ -7,6 +7,7 @@ Github: github.com/MicroOptimization
 import time
 import tkinter as tk
 from tkinter import Canvas
+from ring import Ring
 
 class Application(tk.Frame):
     
@@ -36,12 +37,22 @@ canvas.pack()
 
 app = Application(canvas, master=root)
 
-
+app.add_entity(Ring("Blue", app))
 
 
 continuing_game = True
 while continuing_game:
     root.update_idletasks()
-    root.update()
+    root.update()    
     time.sleep(0.2)
-    app.update()
+    
+    try:
+        app.update()
+    except:
+        print("Program terminated")
+        continuing_game = False
+    
+
+    
+    
+    
