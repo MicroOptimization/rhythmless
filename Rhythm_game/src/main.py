@@ -42,7 +42,7 @@ class Application(tk.Frame):
         
         self.hit_msg = ""
         
-    
+    """
     def update_hit_msg(self, msg):
         self.hit_msg = msg
     
@@ -51,7 +51,7 @@ class Application(tk.Frame):
         print("hm: " , msg)    
         self.canvas.create_text(50, 50, anchor=W, font="Purisa",
                 text="{}".format(self.hit_msg))
-        
+    """    
         
     def update(self):
         self.canvas.delete("all")
@@ -59,8 +59,8 @@ class Application(tk.Frame):
         self.draw_target()
         for object in self.entities:
             object.update()
-        print("Message: " , self.hit_msg)
-        self.send_hit_msg(self.hit_msg)
+        #print("Message: " , self.hit_msg)
+        #self.send_hit_msg(self.hit_msg)
         
     def add_entity(self, new_entity):
         self.entities.append(new_entity)
