@@ -18,8 +18,17 @@ class Application(tk.Frame):
         self.pack()
         
         self.entities = []
-    
+        
+        root.update()   
+        
+        print("h: " , canvas.winfo_width()) #Width
+        print("c: " , canvas.winfo_height()) #Height
+        
+        self.canvas.configure(background="#EAEBEC")
+        self.canvas.pack()
+        
     def update(self):
+        self.canvas.delete("all")
         for object in self.entities:
             object.update()
             
@@ -44,8 +53,7 @@ continuing_game = True
 while continuing_game:
     root.update_idletasks()
     root.update()    
-    time.sleep(0.2)
-    
+    time.sleep(1 / 30)
     try:
         app.update()
     except:
