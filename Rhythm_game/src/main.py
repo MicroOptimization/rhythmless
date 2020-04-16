@@ -1,3 +1,10 @@
+"""
+===========================================
+Author: Codiacs
+Github: github.com/MicroOptimization
+===========================================
+"""
+import time
 import tkinter as tk
 from tkinter import Canvas
 
@@ -12,7 +19,6 @@ class Application(tk.Frame):
         self.entities = []
     
     def update(self):
-        print("Updating")
         for object in self.entities:
             object.update()
             
@@ -25,12 +31,17 @@ class Application(tk.Frame):
 root = tk.Tk()
 
 canvas = Canvas(root, width=500, height=500)
-app = Application(canvas, master=root)
 canvas.pack()
+
+
+app = Application(canvas, master=root)
+
+
+
 
 continuing_game = True
 while continuing_game:
     root.update_idletasks()
     root.update()
-    
+    time.sleep(0.2)
     app.update()
