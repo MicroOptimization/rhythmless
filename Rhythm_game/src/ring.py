@@ -20,29 +20,8 @@ class Ring():
         self.shrink_factor = 0.93
         
     def update(self):
-        #print("y: " , self.y)
-        """
-        msg = ""
         if self.y > self.canvas.winfo_height():
             self.app.entities.remove(self)
-        elif self.y >= 480:
-            print("Miss")
-            msg = "Miss"
-            self.app.update_hit_msg(msg)
-        elif self.y >= 455:
-            print("Okay")
-            msg = "Okay"
-            self.app.update_hit_msg(msg)
-        elif self.y >= 430:
-            print("Great")
-            msg = "Great"
-            self.app.update_hit_msg(msg)
-        elif self.y >= 420:
-            print("Excellent")
-            msg = "Excellent"
-            self.app.update_hit_msg(msg)
-        """
-        #self.radius *= self.grow_factor
         
         self.radius += 5
         self.radius *= self.shrink_factor 
@@ -51,6 +30,7 @@ class Ring():
         self.acceleration = 1.01
         
         self.y += 1.5 
+        self.y += 1.5
         self.y *= self.acceleration
         
         #print(self.radius)
@@ -65,7 +45,7 @@ class Ring():
         
         self.rim_size = 5
         
-        self.canvas.create_oval(x0, y0, x1, y1, fill='#264348')
+        self.canvas.create_oval(x0, y0, x1, y1, fill=self.colour)
         self.canvas.create_oval(x0 + self.rim_size, y0 + self.rim_size, 
                                 x1 - self.rim_size, y1 - self.rim_size,
                                 fill='#EAEBEC')
