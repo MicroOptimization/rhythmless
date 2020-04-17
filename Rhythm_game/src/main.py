@@ -19,18 +19,41 @@ class Application(tk.Frame):
         
         self.entities = []
         
+        self.update()
         
-                
+        self.canvas.bind("<Key>", self.key_listener)
+        self.canvas.bind("<Button-1>", self.focuser)
+        
         self.canvas.configure(background="#EAEBEC")
         self.canvas.pack()
         
+        self.create_bounds()
+        
+    def create_bounds(self):
+        self.tightest_ub = 400 + (100 / 2)
+        self.tightest_lb = 400 + ((100 - self.final_radius) / 2)
+        
+        self.e_ub = self.tightest_ub
+        self.e_lb = self.tightest_lb
+        
+        self.g_ub = self.tightest_ub - 10
+        self.g_lb = self.tightest_lb + 10
+        
+        self.o_ub = self.tightest_ub - 20
+        self.o_lb = self.tightest_lb + 20
+        
+        self.m_ub = self.tightest_lb - 50
+        self.m_lb = self.tightest_lb + 50
+        
+        
     def draw_target(self):
         root.update()
-        final_radius = 69
-        self.ring_x0 = (self.canvas.winfo_width() - final_radius) / 2
-        self.ring_y0 = (self.canvas.winfo_height() - final_radius) - 4
-        self.ring_x1 = (self.canvas.winfo_width() + final_radius) / 2
-        self.ring_y1 = (self.canvas.winfo_height()) - 4
+        self.final_radius = 69
+        
+        self.ring_x0 = (self.canvas.winfo_width() - self.final_radius) / 2
+        self.ring_y0 = (self.canvas.winfo_height() - self.final_radius) - 54 
+        self.ring_x1 = (self.canvas.winfo_width() + self.final_radius) / 2
+        self.ring_y1 = (self.canvas.winfo_height()) - 54
         
         self.canvas.create_oval(self.ring_x0, self.ring_y0, 
                                 self.ring_x1, self.ring_y1)
@@ -39,8 +62,6 @@ class Application(tk.Frame):
         
         self.hit_msg = ""
         
-        self.canvas.bind("<Key>", self.key_listener)
-        self.canvas.bind("<Button-1>", self.focuser)
         
     def key_listener(self, event):
         key = repr(event.char) 
@@ -51,32 +72,44 @@ class Application(tk.Frame):
                 if type(i) is Ring:
                     ring = i
                     print("Ring pos: " , ring.y)
-                    self.check_accuracy(ring.y)
-               
-    def check_accuracy(self, y):
-        if y >= 480:
-            print("Miss")
-            msg = "Miss"
+                    msg = self.check_accuracy(ring.y)
+    
+    def create_bound_debug_lines(self):
+        canvas.create_line(0, self.e_ub, canvas.winfo_width(), self.e_ub, fill="blue")
         
-        elif y >= 455:
-            print("Okay")
-            msg = "Okay"
-
-        elif y >= 430:
-            print("Great")
-            msg = "Great"
-
-        elif y >= 420:
+        
+        print(self.e_lb, self.e_ub)
+        print(self.g_lb, self.g_ub)
+        print(self.o_lb, self.o_ub)
+        print(self.m_lb, self.m_ub)
+        
+    def check_accuracy(self, y):
+        #Setting bounds for target rings
+        
+        
+        msg = ""
+        print()
+        print("y: " , y)
+        
+        if y <= self.e_ub and y >= self.e_lb:
             print("Excellent")
             msg = "Excellent"
-        elif y <= 420:
+        elif y <= self.g_ub and y >= self.g_lb:
             print("Great")
             msg = "Great"
-            
-        elif y <= 410:
+
+        elif y >= self.o_ub and y <= self.o_lb:
+            print("Okay")
+            msg = "Okay"
+        else:
             print("You missed")
             msg = "Miss"
-            
+        
+        
+        
+        
+        return msg
+        
     def focuser(self, event):
         self.canvas.focus_set()
         
@@ -86,7 +119,8 @@ class Application(tk.Frame):
         for object in self.entities:
             object.update()
         self.draw_target()
-    
+        self.create_bound_debug_lines()
+        
     def add_entity(self, new_entity):
         self.entities.append(new_entity)
     
@@ -98,12 +132,13 @@ root = tk.Tk()
 canvas = Canvas(root, width=500, height=500)
 canvas.pack()
 
+canvas.create_text(100, 100, anchor=W, font="Purisa",
+                text="{}".format("asd"))
+        
 
 app = Application(canvas, master=root)
 
-#app.add_entity(Ring("Blue", app))
 app.add_entity(Ring("#264348", app))
-#264348
 
 continuing_game = True
 while continuing_game:

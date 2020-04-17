@@ -48,7 +48,7 @@ class Ring():
         self.canvas.create_oval(x0, y0, x1, y1, fill=self.colour)
         self.canvas.create_oval(x0 + self.rim_size, y0 + self.rim_size, 
                                 x1 - self.rim_size, y1 - self.rim_size,
-                                fill='#EAEBEC')
+                                )
         
         
         
