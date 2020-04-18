@@ -21,6 +21,8 @@ class Application(tk.Frame):
         root.update()
         
         self.final_radius = 69
+        self.draw_target()
+        
         
         self.canvas.bind("<Key>", self.key_listener)
         self.canvas.bind("<Button-1>", self.focuser)
@@ -30,22 +32,7 @@ class Application(tk.Frame):
         
         self.create_bounds()
         self.update()
-        
-    def draw_target(self):
-        root.update()
-        
-        self.ring_x0 = (self.canvas.winfo_width() - self.final_radius) / 2
-        self.ring_y0 = (self.canvas.winfo_height() - self.final_radius) - 54 
-        self.ring_x1 = (self.canvas.winfo_width() + self.final_radius) / 2
-        self.ring_y1 = (self.canvas.winfo_height()) - 54
-        
-        self.canvas.create_oval(self.ring_x0, self.ring_y0, 
-                                self.ring_x1, self.ring_y1)
-        #Give or take should be this: 218.5 433 285.5 500
-        #Old Ver: self.canvas.create_oval(220, 440, 280, 500)
-        
-        self.hit_msg = ""
-        
+    
     def key_listener(self, event):
         key = repr(event.char) 
         if key == "'q'":
@@ -56,24 +43,49 @@ class Application(tk.Frame):
                     ring = i
                     print("Ring pos: " , ring.y)
                     msg = self.check_accuracy(ring.y)
+        
+    def draw_target(self):
+        root.update()
+        
+        self.ring_x0 = (self.canvas.winfo_width() - self.final_radius) / 2
+        self.ring_y0 = 100 + (100 - self.final_radius) - 4 
+        self.ring_x1 = (self.canvas.winfo_width() + self.final_radius) / 2
+        self.ring_y1 = 100 + (100) - 4
+        
+        """
+        self.ring_x0 = (self.canvas.winfo_width() - self.final_radius) / 2
+        self.ring_y0 = (self.canvas.winfo_height() - self.final_radius) - 4 
+        self.ring_x1 = (self.canvas.winfo_width() + self.final_radius) / 2
+        self.ring_y1 = (self.canvas.winfo_height()) - 4
+        """
+        
+        self.canvas.create_oval(self.ring_x0, self.ring_y0, 
+                                self.ring_x1, self.ring_y1)
+        #Give or take should be this: 218.5 433 285.5 500
+        #Old Ver: self.canvas.create_oval(220, 440, 280, 500)
+        
+        self.hit_msg = ""
 
     def create_bounds(self):
         #Setting bounds for target rings
         
-        self.tightest_ub = (self.canvas.winfo_height() / 2)
-        self.tightest_lb = ((self.canvas.winfo_height() - self.final_radius) / 2)
+        #self.tightest_ub = (self.canvas.winfo_height() / 2) - 4
+        #self.tightest_lb = ((self.canvas.winfo_height() - self.final_radius) / 2) - 4
+        
+        self.tightest_ub = self.ring_y0
+        self.tightest_lb = self.ring_y1
         
         self.e_ub = self.tightest_ub
         self.e_lb = self.tightest_lb
         
-        self.g_ub = self.tightest_ub + 10
-        self.g_lb = self.tightest_lb - 10
+        self.g_ub = self.tightest_ub - 10
+        self.g_lb = self.tightest_lb + 10
         
-        self.o_ub = self.tightest_ub + 20
-        self.o_lb = self.tightest_lb - 20
+        self.o_ub = self.tightest_ub - 30
+        self.o_lb = self.tightest_lb + 30
         
-        self.m_ub = self.tightest_lb + 50
-        self.m_lb = self.tightest_lb - 50
+        self.m_ub = self.tightest_ub - 60
+        self.m_lb = self.tightest_lb + 60
     
 
     def create_bound_debug_lines(self):
@@ -89,6 +101,11 @@ class Application(tk.Frame):
         canvas.create_line(0, self.m_ub, canvas.winfo_width(), self.m_ub, fill="black", width=2)
         canvas.create_line(0, self.m_lb, canvas.winfo_width(), self.m_lb, fill="black", width=2)
         
+        #canvas.create_line(0, 400, canvas.winfo_width(), 400, fill="black", width=2)
+        #canvas.create_line(0, 450, canvas.winfo_width(), 450, fill="black", width=2)
+        
+        canvas.create_text(50, 50, text=self.ring_y0)
+        canvas.create_text(50, 100, text=self.ring_y1)
         
     def check_accuracy(self, y):
         msg = ""
@@ -100,6 +117,7 @@ class Application(tk.Frame):
         print(self.o_lb, self.o_ub)
         print(self.m_lb, self.m_ub)
         
+        print(y <= self.e_ub and y >= self.e_lb)
         
         if y <= self.e_ub and y >= self.e_lb:
             print("Excellent")
@@ -151,7 +169,7 @@ continuing_game = True
 while continuing_game:
     root.update_idletasks()
     root.update()    
-    time.sleep(1 / 30)
+    time.sleep(1 / 15)
     try:
         app.update()
     except:
